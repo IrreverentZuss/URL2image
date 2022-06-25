@@ -1,0 +1,1 @@
+1) In line 64, make the "75" dynamic according to the len() of the URL from the left to the right till the third /.
