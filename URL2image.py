@@ -77,5 +77,5 @@ def URL2FhdImage(url):
 			print("\n***Waiting for a URL from Boataround or MMK***\n")
 # If something is copied to the clipboard call function definition "URL2FhdImage".
 clipboard_monitor.on_text(URL2FhdImage)
-# Keep waiting for something to be copied.
+# Keep the thread of listing the clipboard, alive.
 clipboard_monitor.wait()
