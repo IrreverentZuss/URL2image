@@ -2,11 +2,10 @@
 ############### Ver. 1.0 ###############
 
 # Importing libraries.
-import clipboard_monitor
 import urllib.request
 import ctypes
-import clipboard_monitor
 import wget
+import clipboard_monitor
 
 # Print a message.
 print('\n\n\nListen to the copied photo URLS from BoatAround or MMK...\n\n\n')
