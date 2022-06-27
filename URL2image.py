@@ -28,8 +28,8 @@ def URL2FhdImage(url):
 		if MMK in url:
 			# For every current width in the list "MMK".
 			for curWidth in MMKw:
-				# If the defined domain and the current width from the list are contained in the URL.
-				if curWidth and MMK in url:
+				# If current width from the list is contained in the URL.
+				if curWidth in url:
 					# Print message.
 					print("I just got the MMK link...\n")
 					# Replace the found current width in the URL with the "finalWidth".
@@ -38,6 +38,8 @@ def URL2FhdImage(url):
 					print("***Processing***")
 					# Slice the given URL in order to extract the name of the picture and assign it to the atribute "PicName".
 					PicName = url[45:-32]
+					# Print message.
+					print("***Name copied***\n")
 					# Try the following.
 					try:
 						# Request the modified URL and save it in the "New folder" @ at the current location of the script.
@@ -48,6 +50,7 @@ def URL2FhdImage(url):
 					except:
 						# Print message.
 						print("\n****The image already exist****\n")
+				break
 		elif BA in url:
 			# For every current width-height-format in the lists "BAw","BAh" and "BAf".
 			for curWidth,curHeight,carFormat in zip(BAw,BAh,BAf):
@@ -71,10 +74,7 @@ def URL2FhdImage(url):
 					except:
 						# Print message
 						print("\n****The image already exist****\n")
-		# If the URL does not contain the propair URL to download picture.	
-		else:
-			# Print message.
-			print("\n***Waiting for a URL from Boataround or MMK***\n")
+				break
 # If something is copied to the clipboard call function definition "URL2FhdImage".
 clipboard_monitor.on_text(URL2FhdImage)
 # Keep the thread of listing the clipboard, alive.
