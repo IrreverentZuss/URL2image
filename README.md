@@ -12,5 +12,3 @@ This script uses the following libraries:
             4) clipboard_monitor
 
 You are always free to tickle it and use it as you like!
-
-**** Atm there is problem with the library clipboard_monitor but I will start using urllib on my own at some point.
