@@ -1,3 +1,7 @@
 1) In line 64, make the "75" dynamic according to the len() of the URL from the left to the right till the third /.
 
 2) Create the urllib requests.
+
+3) Find a way to scrap the manufactuter, model, year and number of cabs of the boat from the image and set the name of the folder that pics will be contained.
+
+4) To be continued...
