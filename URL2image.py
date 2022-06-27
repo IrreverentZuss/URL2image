@@ -2,10 +2,8 @@
 ############### Ver. 1.0 ###############
 
 # Importing libraries.
-import urllib.request
-import ctypes
-import wget
 import clipboard_monitor
+import urllib.request
 
 # Print a message.
 print('\n\n\nListen to the copied photo URLS from BoatAround or MMK...\n\n\n')
@@ -46,11 +44,14 @@ def URL2FhdImage(url):
 						urllib.request.urlretrieve(url, filename="New folder/"+PicName)
 						# Print message.
 						print("I just saved the image from MMK...\n")
+						# Stop "for" loop.
+						break
 					# On failure follow.
 					except:
 						# Print message.
 						print("\n****The image already exist****\n")
-				break
+						# Stop "for" loop.
+						break
 		elif BA in url:
 			# For every current width-height-format in the lists "BAw","BAh" and "BAf".
 			for curWidth,curHeight,carFormat in zip(BAw,BAh,BAf):
@@ -70,11 +71,14 @@ def URL2FhdImage(url):
 						urllib.request.urlretrieve(url, filename="New folder/"+PicName)
 						# Print message.
 						print("I just saved the image from Boataround...")
+						# Stop "for" loop.
+						break
 					# On failure follow.
 					except:
 						# Print message
 						print("\n****The image already exist****\n")
-				break
+						# Stop "for" loop.
+						break
 # If something is copied to the clipboard call function definition "URL2FhdImage".
 clipboard_monitor.on_text(URL2FhdImage)
 # Keep the thread of listing the clipboard, alive.
