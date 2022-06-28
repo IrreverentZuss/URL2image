@@ -7,7 +7,7 @@ import urllib.request
 
 
 # Print a message.
-print('\n\n\nListen to the copied photo / URLS from BoatAround or MMK...\n\n\n')
+print('\n\n\nListen to the copied URLS from BoatAround or MMK...\n\n\n')
 # Define a new funtion with a "url" as variable.
 def URL2FhdImage(url):
 		# Defining lists with the usual picture attributes of URLs.
@@ -48,7 +48,7 @@ def URL2FhdImage(url):
 			# Print message.
 			print("***Name copied:  " + PicName + "  ***")
 			# Print message.
-			print("***Processing done - URL to be downloaded:\n" + url)
+			print("***Processing done - URL to be downloaded:\n" + url[-32:])
 			# Try the following.
 			try:
 				# Request the modified URL and save it in the "New folder" @ the current location of the script.
@@ -129,5 +129,5 @@ def URL2FhdImage(url):
 					break
 # If text is copied to the clipboard call function definition "URL2FhdImage".
 clipboard_monitor.on_text(URL2FhdImage)
-# Keep the thread of listing the clipboard, alive.
+# Keep the thread of listening the clipboard, alive.
 clipboard_monitor.wait()
