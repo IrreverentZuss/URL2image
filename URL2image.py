@@ -1,133 +1,180 @@
 #$$$$ Created by Irreverent - 6/21 $$$$#
-############### Ver. 1.0 ###############
+############### Ver. 1.2 ###############
 
 # Importing libraries.
 import clipboard_monitor
 import urllib.request
+import time
+import signal
+import sys
+import os
+from tqdm import tqdm
+
+# Creating class "DownloadProgressBar" with "tqdm" as atrribute.
+class DownloadProgressBar(tqdm):
+	# Creating function "update_to" with some arguments to share with functions and show on progress bar.
+	def update_to(self, b=1, bsize=1, tsize=None):
+		# If "tsize" is not empty.
+		if tsize is not None:
+			# Everytime add tsize to self.total .
+			self.total = tsize
+		# Update the counter of progress bar with the condition below.
+		self.update(b * bsize - self.n)
+
+# Creating class "URL2FhdImage".
+class URL2FhdImage():
+
+	# Creating function "__init__" with self as atribute.
+	def __init__(self):
+			# Defining the usual picture attributes of URLs and desired variables.
+			self.newpath = r'.\PicFolder'
+			self.MMKw = ['width=640','width=324','width=160','width=79',]
+			self.BAw = ['width=1533','width=1289','width=1022','width=859','width=58']
+			self.BAh = ['height=450','height=675', 'height=450','height=58']
+			self.BAf = ['format=webp']
+			# Defining atributes with the desired domain names.
+			self.MMK = 'portal.booking-manager.com/wbm2/bmdoc/'
+			self.BA = 'imageresizer.yachtsbt.com'
+			# Defining final atributes of URLS.
+			self.finalWidth = 'width=5000'
+			self.finalHeight = 'height=5000'
+			self.finalFormat = 'format=jpeg'
+
+	def countdown(t):
+			t = 100
+			while t:
+				mins, secs = divmod(t,60)
+				timer = '{:02d}:{:02d}'.format(mins,secs)
+				print(timer,end='\r')
+				time.sleep(0.3)
+				t-=1
+
+	#Creating function "initialize".
+	def initialize(url):
+			run = URL2FhdImage()
+			toDo = ['']
+			oldtime = time.time()
+			print("\nThe time remaining to copy the URLs of images:")
+			run.countdown()
+			for x in range[1,50]:
+				toDo.append(url)
+				print(x+". URL(s) have/has been added to queue for download.")
+				if time.time() - oldtime > 100 and toDo != '':
+					for x in toDo:
+						run.main(x)
+					toDo = ['']
+					break
+				else:
+					print("\n\tWaiting for a URL to be copied...")
 
 
-# Print a message.
-print('\n\n\nListen to the copied URLS from BoatAround or MMK...\n\n\n')
-# Define a new funtion with a "url" as variable.
-def URL2FhdImage(url):
-		# Defining lists with the usual picture attributes of URLs.
-		MMKw = ['width=640','width=324','width=160','width=79',]
-		BAw = ['width=1533','width=1289','width=1022','width=859','width=58']			
-		BAh = ['height=450','height=675', 'height=450','height=58']
-		BAf = ['format=webp']
-		# Defining atributes "MMKdom", "BAdom" and "doms" with domain names.
-		MMK = 'portal.booking-manager.com/wbm2/bmdoc/'
-		BA = 'imageresizer.yachtsbt.com'
-		doms = MMK or BA
-		# Defining lists with final atributes of URLS.
-		finalWidth = 'width=5000'
-		finalHeight = 'height=5000'
-		finalFormat = 'format=jpeg'
-		# If the URL contains the defined domains continue.
-		if MMK in url:
-			# Print message.
-			print("\n\nI just got the MMK link...\n")
-			# For every width in the list "MMK".
-			for curWidth in MMKw:
-				# If current width from the list is contained in the URL.
-				if curWidth in url:
-					# Replace the found current width in the URL with the "finalWidth".
-					url = url.replace(curWidth, finalWidth)
+	# Print a message.
+	print("\n\n\n|*|--------Monitoring clipboard for image URL from BoatAround or MMK--------|*|")
+	# Create funtion "main" with "self" and "url" as variables.
+	def main(self, url):
+			# If there is no folder "PicFolder" @ the current location of the script
+			if not os.path.exists(self.newpath):
+				# Create a folder named "PicFolder".
+				os.makedirs(self.newpath)
+				# Print a message.
+				print("\n|~~~|--Folder 'PicFolder' @ current location of script, created--|~~~|\n")
+			# If the URL contains the defined domains continue.
+			if self.MMK in url:
+				# Slice the given URL in order to extract the name of the picture and assign it to the atribute "PicName".
+				PicName = url[46:-32]
+				# If the image doesn't exist.
+				if not os.path.exists(PicName):
 					# Print message.
-					print("***Done replacing width***")
-					# Break the for loop.
-					break
-			# If string "efaultToEmpty=true", exixst into the copied URL.
-			if 'defaultToEmpty=true' in url:
-				# Replace the found "defaultToEmpty=true" and replace it with "defaultToEmpty=false".
-				url = url.replace('defaultToEmpty=true', 'defaultToEmpty=false')
-				# Print message.
-				print("***Done replacing 'defaultToEmpty'***")
-			# Slice the given URL in order to extract the name of the picture and assign it to the atribute "PicName".
-			PicName = url[46:-32]
-			# Print message.
-			print("***Name copied:  " + PicName + "  ***")
-			# Print message.
-			print("***Processing done - URL to be downloaded:\n" + url[-32:])
-			# Try the following.
-			try:
-				# Request the modified URL and save it in the "New folder" @ the current location of the script.
-				urllib.request.urlretrieve(url, filename="New folder/"+PicName)
-				# Print message.
-				print("              ****\nI just saved the image from MMK...\n              ****\n\n")
-			# On failure follow.
-			except:
-				for i in range(1, 2):
-					# Set the number of i plus the PicName in order to be able to save it.
-					PicName = str(i) + PicName
-					# Request the modified URL and save it in the "New folder" @ the current location of the script.
-					urllib.request.urlretrieve(url, filename="New folder/"+PicName)
-					# Print message
-					print("***The image already exist, that's why I download it by name: "+PicName)
-					# Stop for loop.
-					break
-		elif BA in url:
-			# Print message.
-			print("\n\nI just got the BoatAround link...\n")
-			# For every width in the list "BAw".
-			for curWidth in BAw:
-				# If current width in the URL.
-				if curWidth in url:
-					# Replace the found current width with the "finalWidth".
-					url = url.replace(curWidth, finalWidth)
+					print("\n\n[*] - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ - [*]")
 					# Print message.
-					print("***Done replacing width...")
-					# Stop for loop.
-					break
-			# For every height in the list "BAh".
-			for curHeight in BAh:
-				# If current height in the URL.
-				if curHeight in url:
-					# Replace the found current height with the "finalHeight".
-					url = url.replace(curHeight, finalHeight)
+					print("\t[1] - Done Name extraction")
+					# For every width in the list "MMK".
+					for self.curWidth in self.MMKw:
+						# If current width from the list is contained in the URL.
+						if self.curWidth in url:
+							# Replace the found current width in the URL with the "finalWidth".
+							url = url.replace(self.curWidth, self.finalWidth)
+							# Print message.
+							print("\t[2] - Done Width replacement")
+							# Break the for loop.
+							break
+						# If string "efaultToEmpty=true", exixst into the copied URL.
+						if 'defaultToEmpty=true' in url:
+							# Replace the found "defaultToEmpty=true" and replace it with "defaultToEmpty=false".
+							url = url.replace('defaultToEmpty=true', 'defaultToEmpty=false')
+							# Print message.
+							print("\t[3] - Done 'defaultToEmpty' replacement")
+						# Start the progress bar with some arguments as "t".
+						with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, unit_divisor=1024, desc=PicName) as t:	
+							# Request the modified URL and save it in the "PicFolder" @ the current location of the script
+							# and update about the progress bar according.
+							urllib.request.urlretrieve(url, filename="PicFolder/"+PicName, reporthook=t.update_to)
+						# Print message.
+						print("\n\t[*] - The MMK image saved - [*]\n\n")
+					# On failure follow.
+				else:
+					print("\n\t[$] - Image already exist - [*]\n\n")
+			# If the URL contains the defined domain continue.
+			elif self.BA in url:
+				# Split the "url" and assign the elements to "PicName".
+				PicName = url.split('/')
+				# Assign "PicName" the fifth element.
+				PicName = PicName[5]
+				# Cut everything from "?" till the end and assign it to "PicName".
+				PicName = PicName[:PicName.index('?'):]
+				# Print message.
+				print("\n[*] - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ - [*]")
+				# Print message.
+				print("\t[1] - Done Name extraction")
+				# If the image doesn't exist.
+				if not os.path.exists(PicName):
+					# For every width in the list "BAw".
+					for self.curWidth in self.BAw:
+						# If current width in the URL.
+						if self.curWidth in url:
+							# Replace the found current width with the "finalWidth".
+							url = url.replace(self.curWidth, self.finalWidth)
+							# Print message.
+							print("\t[2] - Done Width replacement")
+							# Stop for loop.
+							break
+					# For every height in the list "BAh".
+					for self.curHeight in self.BAh:
+						# If current height in the URL.
+						if self.curHeight in url:
+							# Replace the found current height with the "finalHeight".
+							url = url.replace(self.curHeight, self.finalHeight)
+							# Print message.
+							print("\t[3] - Done Height replacement")
+							# Stop for loop.
+							break
+					# For every format in the list "BAf".
+					for self.curFormat in self.BAf:
+						if self.curFormat in url:
+							# Replace the found current format with the "finalFormat".
+							url = url.replace(self.curFormat, self.finalFormat)
+							print("\t[4] - Done 'format' replacement")
+							# Stop for loop.
+							break
+					# If string "method=fit", exixst into the copied URL.
+					if 'method=fit' in url:
+						# Replace the found "method=fit" and replace it with "method=crop".
+						url = url.replace('method=fit', 'method=crop')
+						# Print message.
+						print("\t[5] - Done replacing 'method'")
+					# Start the progress bar with some arguments as "t".
+					with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, unit_divisor=1024, desc=PicName) as t:	
+						# Request the modified URL and save it in the "PicFolder" @ the current location of the script
+						# and update about the progress bar according.
+						urllib.request.urlretrieve(url, filename="PicFolder/"+PicName, reporthook=t.update_to)
 					# Print message.
-					print("***Done replacing height...")
-					# Stop for loop.
-					break
-			# For every format in the list "BAf".
-			for curFormat in BAf:
-				if curFormat in url:
-					# Replace the found current format with the "finalFormat".
-					url = url.replace(curFormat, finalFormat)
-					print("***Done replacing format...***")
-					# Stop for loop.
-					break
-			# If string "method=fit", exixst into the copied URL.
-			if 'method=fit' in url:
-				# Replace the found "method=fit" and replace it with "method=crop".
-				url = url.replace('method=fit', 'method=crop')
-				# Print message.
-				print("***Done replacing 'method'***")
-			# Slice the given URL in order to extract the name of the picture and assign it to the atribute "PicName".
-			PicName = url[63:-47]
-			# Print message.
-			print("***Name copied:  " + PicName)
-			# Print message.
-			print("*Processing Done - URL to be downloaded:\n" + url[-46:])
-			# Try the following.
-			try:
-				# Request the modified URL and save it in the "New folder" @ the current location of the script.
-				urllib.request.urlretrieve(url, filename="New folder/"+PicName)
-				# Print message.
-				print("                ****\nI just saved the image from Boataround...\n                ****\n\n")
-				# Stop for loop.
-			# On failure follow.
-			except:
-				for i in range(1, 2):
-					# Set the number of i plus the PicName in order to be able to save it.
-					PicName = str(i) + PicName
-					# Request the modified URL and save it in the "New folder" @ the current location of the script.
-					urllib.request.urlretrieve(url, filename="New folder/"+PicName)
-					# Print message
-					print("***The image already exist, that's why I download it by name: "+PicName)
-					# Stop for loop.
-					break
-# If text is copied to the clipboard call function definition "URL2FhdImage".
-clipboard_monitor.on_text(URL2FhdImage)
-# Keep the thread of listening the clipboard, alive.
+					print("\n\t[*] - The Boataround image saved - [*]\n\n")
+				# On failure follow.
+				else:
+					# Print message.
+					print("\n\t[$] - Image already exist - [$]\n\n")
+
+# If text is copied to the clipboard call from class "URL2FhdImage" function "intialize".
+clipboard_monitor.on_text(URL2FhdImage.initialize()) 
+# Keep thread of listening the clipboard, alive.
 clipboard_monitor.wait()
