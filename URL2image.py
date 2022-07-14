@@ -1,5 +1,5 @@
 #$$$$ Created by Irreverent - 6/21 $$$$#
-############### Ver. 1.2 ###############
+############### Ver. 1.3 ###############
 
 # Importing libraries.
 import clipboard_monitor
@@ -10,20 +10,8 @@ import sys
 import os
 from tqdm import tqdm
 
-# Creating class "DownloadProgressBar" with "tqdm" as atrribute.
-class DownloadProgressBar(tqdm):
-	# Creating function "update_to" with some arguments to share with functions and show on progress bar.
-	def update_to(self, b=1, bsize=1, tsize=None):
-		# If "tsize" is not empty.
-		if tsize is not None:
-			# Everytime add tsize to self.total .
-			self.total = tsize
-		# Update the counter of progress bar with the condition below.
-		self.update(b * bsize - self.n)
-
 # Creating class "URL2FhdImage".
 class URL2FhdImage():
-
 	# Creating function "__init__" with self as atribute.
 	def __init__(self):
 			# Defining the usual picture attributes of URLs and desired variables.
@@ -40,36 +28,25 @@ class URL2FhdImage():
 			self.finalHeight = 'height=5000'
 			self.finalFormat = 'format=jpeg'
 
-	def countdown(t):
-			t = 100
-			while t:
-				mins, secs = divmod(t,60)
-				timer = '{:02d}:{:02d}'.format(mins,secs)
-				print(timer,end='\r')
-				time.sleep(0.3)
-				t-=1
 
-	#Creating function "initialize".
-	def initialize(url):
-			run = URL2FhdImage()
-			toDo = ['']
-			oldtime = time.time()
-			print("\nThe time remaining to copy the URLs of images:")
-			run.countdown()
-			for x in range[1,50]:
+	def initialize(self, url):
+			while self.stoprunning == False:
+				run = URL2FhdImage()
 				toDo.append(url)
-				print(x+". URL(s) have/has been added to queue for download.")
-				if time.time() - oldtime > 100 and toDo != '':
-					for x in toDo:
-						run.main(x)
-					toDo = ['']
+				print(str(x)+". URL(s) have/has been added to queue for download.")
+				#	if time.time() - oldtime > 120 and toDo != '':
+				if 
+			for x in toDo:
+				run.main(x)
+				if x == toDo[-1]:
+					toDo = [""]
 					break
-				else:
-					print("\n\tWaiting for a URL to be copied...")
+			else:
+				print("\n\tWaiting for a URL to be copied...")
 
 
 	# Print a message.
-	print("\n\n\n|*|--------Monitoring clipboard for image URL from BoatAround or MMK--------|*|")
+	print("\n\n\n|*|-Monitoring clipboard for image URL from BoatAround or MMK---2min/time*--|*|")
 	# Create funtion "main" with "self" and "url" as variables.
 	def main(self, url):
 			# If there is no folder "PicFolder" @ the current location of the script
@@ -174,7 +151,17 @@ class URL2FhdImage():
 					# Print message.
 					print("\n\t[$] - Image already exist - [$]\n\n")
 
+# Creating class "DownloadProgressBar" with "tqdm" as atrribute.
+class DownloadProgressBar(tqdm):
+	# Creating function "update_to" with some arguments to share with functions and show on progress bar.
+	def update_to(self, b=1, bsize=1, tsize=None):
+		# If "tsize" is not empty.
+		if tsize is not None:
+			# Everytime add tsize to self.total .
+			self.total = tsize
+		# Update the counter of progress bar with the condition below.
+		self.update(b * bsize - self.n)
+
 # If text is copied to the clipboard call from class "URL2FhdImage" function "intialize".
-clipboard_monitor.on_text(URL2FhdImage.initialize()) 
+clipboard_monitor.on_text(URL2FhdImage.initialize) 
 # Keep thread of listening the clipboard, alive.
-clipboard_monitor.wait()
