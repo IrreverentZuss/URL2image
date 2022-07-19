@@ -27,26 +27,32 @@ class URL2FhdImage():
 			self.finalWidth = 'width=5000'
 			self.finalHeight = 'height=5000'
 			self.finalFormat = 'format=jpeg'
+			# Define time attributes.
+			self.time_end = 0
+			self._is_running = False
+			self.start_time = None
 
+	# Print a message.
+	print("\n\n|*|-Monitoring clipboard for image URL from BoatAround or MMK---2min/time*--|*|")
 
 	def initialize(self, url):
-			while self.stoprunning == False:
-				run = URL2FhdImage()
-				toDo.append(url)
-				print(str(x)+". URL(s) have/has been added to queue for download.")
-				#	if time.time() - oldtime > 120 and toDo != '':
-				if 
+			run = URL2FhdImage()
+			timer1 = countdown_timer()
+			if self.MMK or self.BA in url:
+				timer1.start(120)
+				print("\nYou have 2 minutes to copy all the pictures in need.")
+				timer1.is_running()
+				while True:
+					if self.MMK or self.BA in url:
+						toDo.append(url)
+						print(len(toDo) + " URL(s) has/have been added to queue for download.")
 			for x in toDo:
 				run.main(x)
 				if x == toDo[-1]:
 					toDo = [""]
+					print ("\nDone saving images..")
 					break
-			else:
-				print("\n\tWaiting for a URL to be copied...")
 
-
-	# Print a message.
-	print("\n\n\n|*|-Monitoring clipboard for image URL from BoatAround or MMK---2min/time*--|*|")
 	# Create funtion "main" with "self" and "url" as variables.
 	def main(self, url):
 			# If there is no folder "PicFolder" @ the current location of the script
@@ -162,6 +168,32 @@ class DownloadProgressBar(tqdm):
 		# Update the counter of progress bar with the condition below.
 		self.update(b * bsize - self.n)
 
+class countdown_timer():
+    def __init__(self):
+        self.time_end = 0
+        self._is_running = False
+        self.start_time = None
+    
+    def start(self, countdown_time):
+        self.start_time = time.time()
+        self.time_end = countdown_time
+        self._is_running = True
+    
+    def get_time(self):
+        if time.time() - self.start_time >= self.time_end:
+            self._is_running = False
+        if self._is_running:
+            return self.time_end - (time.time() - self.start_time)
+        else:
+            return 0
+    
+    def is_running(self):
+        if time.time() - self.start_time >= self.time_end:
+            self._is_running = False
+        return self._is_running
+
 # If text is copied to the clipboard call from class "URL2FhdImage" function "intialize".
-clipboard_monitor.on_text(URL2FhdImage.initialize) 
+#clipboard_monitor.on_text(URL2FhdImage.initialize)
+clipboard_monitor.on_text(URL2FhdImage.main)
 # Keep thread of listening the clipboard, alive.
+clipboard_monitor.wait()
