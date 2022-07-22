@@ -1,5 +1,5 @@
 #$$$$ Created by Irreverent - 6/21 $$$$#
-############### Ver. 1.3 ###############
+############### Ver. 1.4 ###############
 
 # Importing libraries.
 import clipboard_monitor
@@ -33,7 +33,7 @@ class URL2FhdImage():
 			self.start_time = None
 
 	# Print a message.
-	print("\n\n|*|-Monitoring clipboard for image URL from BoatAround or MMK---2min/time*--|*|")
+	print("\n\n|*|-------Monitoring clipboard for image URL from BoatAround or MMK-------|*|")
 
 	def initialize(self, url):
 			run = URL2FhdImage()
@@ -63,10 +63,14 @@ class URL2FhdImage():
 				print("\n|~~~|--Folder 'PicFolder' @ current location of script, created--|~~~|\n")
 			# If the URL contains the defined domains continue.
 			if self.MMK in url:
+				# Split the copied URL by character "?" and assign it to "PicName".
+				PicName = url.split('?')
+				# Set "PicName" the first segment from the split.
+				PicName = PicName[0]
 				# Slice the given URL in order to extract the name of the picture and assign it to the atribute "PicName".
-				PicName = url[46:-32]
+				PicName = PicName[46:]
 				# If the image doesn't exist.
-				if not os.path.exists(PicName):
+				if not os.path.exists('.\\PicFolder\\' + PicName):
 					# Print message.
 					print("\n\n[*] - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ - [*]")
 					# Print message.
@@ -81,20 +85,20 @@ class URL2FhdImage():
 							print("\t[2] - Done Width replacement")
 							# Break the for loop.
 							break
-						# If string "efaultToEmpty=true", exixst into the copied URL.
-						if 'defaultToEmpty=true' in url:
-							# Replace the found "defaultToEmpty=true" and replace it with "defaultToEmpty=false".
-							url = url.replace('defaultToEmpty=true', 'defaultToEmpty=false')
-							# Print message.
-							print("\t[3] - Done 'defaultToEmpty' replacement")
-						# Start the progress bar with some arguments as "t".
-						with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, unit_divisor=1024, desc=PicName) as t:	
-							# Request the modified URL and save it in the "PicFolder" @ the current location of the script
-							# and update about the progress bar according.
-							urllib.request.urlretrieve(url, filename="PicFolder/"+PicName, reporthook=t.update_to)
+					# If string "efaultToEmpty=true", exixst into the copied URL.
+					if 'defaultToEmpty=true' in url:
+						# Replace the found "defaultToEmpty=true" and replace it with "defaultToEmpty=false".
+						url = url.replace('defaultToEmpty=true', 'defaultToEmpty=false')
 						# Print message.
-						print("\n\t[*] - The MMK image saved - [*]\n\n")
-					# On failure follow.
+						print("\t[3] - Done 'defaultToEmpty' replacement")
+					# Start the progress bar with some arguments as "t".
+					with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, unit_divisor=1024, desc=PicName) as t:	
+						# Request the modified URL and save it in the "PicFolder" @ the current location of the script
+						# and update about the progress bar according.
+						urllib.request.urlretrieve(url, filename="PicFolder/"+PicName, reporthook=t.update_to)
+					# Print message.
+					print("\n\t[*] - The MMK image saved - [*]\n\n")
+				# On failure follow.
 				else:
 					print("\n\t[$] - Image already exist - [*]\n\n")
 			# If the URL contains the defined domain continue.
@@ -133,9 +137,11 @@ class URL2FhdImage():
 							break
 					# For every format in the list "BAf".
 					for self.curFormat in self.BAf:
+						# If current format in the URL.
 						if self.curFormat in url:
 							# Replace the found current format with the "finalFormat".
 							url = url.replace(self.curFormat, self.finalFormat)
+							# Print message.
 							print("\t[4] - Done 'format' replacement")
 							# Stop for loop.
 							break
@@ -192,8 +198,9 @@ class countdown_timer():
             self._is_running = False
         return self._is_running
 
+# Male a new isntance of class "URL2FhdImage".
+run =  URL2FhdImage()
 # If text is copied to the clipboard call from class "URL2FhdImage" function "intialize".
-#clipboard_monitor.on_text(URL2FhdImage.initialize)
-clipboard_monitor.on_text(URL2FhdImage.main)
+clipboard_monitor.on_text(run.main)
 # Keep thread of listening the clipboard, alive.
 clipboard_monitor.wait()
