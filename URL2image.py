@@ -100,7 +100,7 @@ class URL2FhdImage():
 					print("\n\t[*] - The MMK image saved - [*]\n\n")
 				# On failure follow.
 				else:
-					print("\n\t[$] - Image already exist - [*]\n\n")
+					print("\n\t[$] - Image already exist - [$]\n\n")
 			# If the URL contains the defined domain continue.
 			elif self.BA in url:
 				# Split the "url" and assign the elements to "PicName".
@@ -109,12 +109,12 @@ class URL2FhdImage():
 				PicName = PicName[5]
 				# Cut everything from "?" till the end and assign it to "PicName".
 				PicName = PicName[:PicName.index('?'):]
-				# Print message.
-				print("\n[*] - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ - [*]")
-				# Print message.
-				print("\t[1] - Done Name extraction")
 				# If the image doesn't exist.
-				if not os.path.exists(PicName):
+				if not os.path.exists('.\\PicFolder\\' + PicName):
+					# Print message.
+					print("\n[*] - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ - [*]")
+					# Print message.
+					print("\t[1] - Done Name extraction")
 					# For every width in the list "BAw".
 					for self.curWidth in self.BAw:
 						# If current width in the URL.
